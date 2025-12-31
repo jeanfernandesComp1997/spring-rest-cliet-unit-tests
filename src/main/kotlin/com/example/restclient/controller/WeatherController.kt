@@ -1,5 +1,6 @@
 package com.example.restclient.controller
 
+import com.example.restclient.model.WeatherCondition
 import com.example.restclient.service.WeatherService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +17,7 @@ class WeatherController(
     @GetMapping
     suspend fun retrieveCurrentWeatherByZipCode(
         @RequestParam("zipCode") zipCode: String
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<WeatherCondition> {
         return ResponseEntity.ok(weatherService.retrieveCurrentWeatherByZipCode(zipCode))
     }
 }
