@@ -5,4 +5,6 @@ import com.example.restclient.model.WeatherConditionGatewayResponse
 interface ExternalWeatherGateway {
 
     suspend fun retrieveWeatherByZipCode(zipCode: String): WeatherConditionGatewayResponse
+
+    suspend fun retrieveWeatherByZipCodeWithWeatherClientConfig(zipCode: String): WeatherConditionGatewayResponse
 }
