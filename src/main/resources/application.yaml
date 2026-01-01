@@ -4,5 +4,27 @@ spring:
   threads:
     virtual:
       enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: "test-group"
+      auto-offset-reset: earliest
+      # Key is usually a simple String
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Value uses the Confluent JSON Schema Deserializer
+      value-deserializer: io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        schema.registry.url: http://localhost:8081
+        # Maps the JSON schema to this specific class
+        json.value.type: com.example.restclient.model.Event
+    listener:
+      ack-mode: manual
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+
 server:
   port: 8181

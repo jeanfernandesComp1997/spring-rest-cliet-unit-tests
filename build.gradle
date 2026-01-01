@@ -17,17 +17,21 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://packages.confluent.io/maven/") }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation("io.confluent:kafka-json-schema-serializer:${confluentVersion}")
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${mockWebServerVersion}")
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -39,7 +43,15 @@ kotlin {
     }
 }
 
-tasks.named('test') {
+configurations.configureEach {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.apache.commons' && details.requested.name == 'commons-lang3') {
+            details.useVersion commonsLang3Version
+        }
+    }
+}
+
+test {
     useJUnitPlatform()
-    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }.absolutePath}"
+    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}"
 }
