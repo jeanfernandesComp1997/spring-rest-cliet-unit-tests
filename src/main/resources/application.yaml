@@ -26,5 +26,19 @@ spring:
       properties:
         schema.registry.url: http://localhost:8081
 
+  cloud:
+    aws:
+      credentials:
+        instance-profile: true
+        secret-key: test
+        access-key: test
+      region:
+        static: us-east-1
+      endpoint: http://localhost:4566
+
 server:
   port: 8181
+
+sqs:
+  queue:
+    name: test-queue.fifo
